@@ -3,40 +3,35 @@
 var href = window.location.href;
 var hrefArray = href.split('=');
 var pageId = hrefArray.pop();
-var imgArray2 = new Array();
 var idArray2 = new Array();
+//testing
+//console.log('pageId: ', pageId);
 
-console.log('pageId: ', pageId);
 const googleURL =
-  'https://script.googleusercontent.com/macros/echo?user_content_key=lf0cNhjE2n9V6RvVRuS1V8fpXtnbeKnckCWR3edyGJ4LHP7c4PJH5AIEYRvGvvDjDzRpEQEyFVVPHGWGsEIyt5eTCaq3udvum5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnD-Gcit54aFufXByLsd0nptTvZvjtOqq68knHse3_n_OzwJKbhhEQ7o-Xr0opLVr6SFzvG5rdkMJQt2REjMoUZqYi33g8tsfTdz9Jw9Md8uu&lib=Meptghl_07YWH1V1E5dKHir-ughKgtinJ';
+  'https://script.googleusercontent.com/macros/echo?user_content_key=2ZGU6z9X-gmNktHtiN64zfYw-u2sPyVD4YHE-o3BuOV9IOqVZUR8Hvw_GtA3x-gvjDnw4FaRQ1PXdMTKyxqVnWYuU6Q1mlitm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnBmWV0uqwEUYvQVTbSroa-LtVkQyxaOPswDQ-hZlC_ULkLK00J9YMfrBZnivBAIblN62jYw-3L_yrXivIZwbqvN7uqm8wDfASdz9Jw9Md8uu&lib=MTiSNS-2lUNP9cEBKSL4-jL-ughKgtinJ';
 (async () => {
   const getData = async () => {
     const res = await fetch(googleURL);
     const data = await res.json();
-    console.log('data: ', data.GoogleSheetData);
     return data.GoogleSheetData;
   };
   displayGoogleSheetData = await getData();
 
-  for (var i = 0; i < displayGoogleSheetData.length; i++) {
-    var newImgUrl = displayGoogleSheetData[i][3];
-    newImgUrl = newImgUrl.replace('open?', 'thumbnail?');
-    imgArray2.push(newImgUrl);
-  }
-
-  for (var i = 0; i < imgArray2.length; i++) {
-    var id = imgArray2[i];
-    id = id.replace('https://drive.google.com/thumbnail?id=', '');
+  for (var i = 1; i < displayGoogleSheetData.length; i++) {
+    var id = displayGoogleSheetData[i][4];
     idArray2.push(id);
   }
+  //testing
+  //console.log('idArray2: ', idArray2);
 
   var x;
   var index;
   for (x = 1; x < idArray2.length; x++) {
     if (idArray2[x] == pageId) {
-      index = x;
+      return x;
     }
   }
+  //console.log('x: ', x);
 
   //Article Page
   var newArticle =
@@ -44,14 +39,16 @@ const googleURL =
   newArticle += '<ul>';
   newArticle +=
     '<figure><img src="' +
-    imgArray2[index] +
-    '" width="100%" height="100%" /></figure>';
+    displayGoogleSheetData[x][3] +
+    '" width="100%" height="100%" alt="' +
+    displayGoogleSheetData[x][5] +
+    '"/></figure>';
   newArticle += '<div>';
   newArticle += '<label>Name</label>';
-  newArticle += '<p>' + displayGoogleSheetData[index][1] + '</p>';
+  newArticle += '<p>' + displayGoogleSheetData[x][1] + '</p>';
   newArticle += '<br />';
   newArticle += '<label>Email</label>';
-  newArticle += '<p>' + displayGoogleSheetData[index][2] + '</p>';
+  newArticle += '<p>' + displayGoogleSheetData[x][2] + '</p>';
   newArticle += '</div>';
 
   newArticle += '</ul>';

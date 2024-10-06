@@ -1,30 +1,17 @@
 const googleURL =
-  'https://script.google.com/macros/s/AKfycbzeTzbQ5sF7m2VFTZlTb5HIUXYHdJk7Bx1ZZA8BCkswFZk1SJntjTRgFX0qs67hG0HC0Q/exec';
+  'https://script.googleusercontent.com/macros/echo?user_content_key=2ZGU6z9X-gmNktHtiN64zfYw-u2sPyVD4YHE-o3BuOV9IOqVZUR8Hvw_GtA3x-gvjDnw4FaRQ1PXdMTKyxqVnWYuU6Q1mlitm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnBmWV0uqwEUYvQVTbSroa-LtVkQyxaOPswDQ-hZlC_ULkLK00J9YMfrBZnivBAIblN62jYw-3L_yrXivIZwbqvN7uqm8wDfASdz9Jw9Md8uu&lib=MTiSNS-2lUNP9cEBKSL4-jL-ughKgtinJ';
 let displayGoogleSheetData;
-var idArray = new Array();
-var imgArray = new Array();
+
 (async () => {
   const getData = async () => {
     const res = await fetch(googleURL);
     const data = await res.json();
-    console.log('data: ', data.GoogleSheetData);
+    //testing
+    //console.log('data: ', data.GoogleSheetData);
     return data.GoogleSheetData;
   };
   displayGoogleSheetData = await getData();
 
-  for (var i = 0; i < displayGoogleSheetData.length; i++) {
-    var newImgUrl = displayGoogleSheetData[i][3];
-    newImgUrl = newImgUrl.replace('open?', 'thumbnail?');
-    imgArray.push(newImgUrl);
-  }
-  console.log('imgArray: ', imgArray);
-
-  for (var i = 0; i < imgArray.length; i++) {
-    var id = imgArray[i];
-    id = id.replace('https://drive.google.com/thumbnail?id=', '');
-    idArray.push(id);
-  }
-  console.log('idArray: ', idArray);
   //Gallery Page
   var newArticleCover = ' <h1>Gallery of Artcles</h1>';
   newArticleCover +=
@@ -32,14 +19,22 @@ var imgArray = new Array();
   newArticleCover += '<ul>';
   for (var i = 1; i < displayGoogleSheetData.length; i++) {
     newArticleCover +=
-      '<li style="list-style:none;" id="' + idArray[i] + '"><figure>';
+      '<li style="list-style:none;" id="' +
+      displayGoogleSheetData[i][4] +
+      '"><figure>';
     newArticleCover +=
-      '<a href="article.html?id=' + idArray[i] + '" target="_/blank">';
+      '<a href="article.html?id=' +
+      displayGoogleSheetData[i][4] +
+      '" target="_/blank">';
     newArticleCover +=
-      '<img src="' + imgArray[i] + '" width="100%" height="100%" />';
-  }
-  newArticleCover += ' </a></figure></li>';
+      '<figure><img src="' +
+      displayGoogleSheetData[i][3] +
+      '" width="100%" height="100%" alt="' +
+      displayGoogleSheetData[i][3] +
+      '"/>';
 
+    newArticleCover += ' </figure></a></li>';
+  }
   newArticleCover += '</ul>';
   document.getElementById('gallery').innerHTML = newArticleCover;
 })();
